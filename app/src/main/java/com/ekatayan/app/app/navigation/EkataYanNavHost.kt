@@ -12,6 +12,8 @@ import com.ekatayan.app.feature.planner.PLANNER_ROUTE
 import com.ekatayan.app.feature.planner.plannerScreen
 import com.ekatayan.app.feature.profile.PROFILE_ROUTE
 import com.ekatayan.app.feature.profile.profileScreen
+import com.ekatayan.app.feature.signup.SIGN_UP_ROUTE
+import com.ekatayan.app.feature.signup.signUpScreen
 import com.ekatayan.app.feature.trips.TRIPS_ROUTE
 import com.ekatayan.app.feature.trips.tripsScreen
 
@@ -22,9 +24,10 @@ fun EkataYanNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = HOME_ROUTE,
+        startDestination = SIGN_UP_ROUTE,
         modifier = modifier,
     ) {
+        signUpScreen(onLoginClick = { navController.navigate(HOME_ROUTE) })
         homeScreen(
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
