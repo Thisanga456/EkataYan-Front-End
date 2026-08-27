@@ -34,7 +34,6 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     }
     fun onTermsAcceptedChange(value: Boolean) = update { copy(hasAcceptedTerms = value) }
 
-    fun onSignUpClick() = Unit
     fun onGoogleClick() = Unit
     fun onAppleClick() = Unit
 

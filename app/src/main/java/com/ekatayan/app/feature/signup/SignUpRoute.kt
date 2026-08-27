@@ -5,6 +5,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun SignUpRoute(
+    onSignUpClick: () -> Unit,
     onLoginClick: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
@@ -18,7 +19,7 @@ fun SignUpRoute(
         onPasswordVisibilityClick = viewModel::onPasswordVisibilityClick,
         onConfirmPasswordVisibilityClick = viewModel::onConfirmPasswordVisibilityClick,
         onTermsAcceptedChange = viewModel::onTermsAcceptedChange,
-        onSignUpClick = viewModel::onSignUpClick,
+        onSignUpClick = onSignUpClick,
         onGoogleClick = viewModel::onGoogleClick,
         onAppleClick = viewModel::onAppleClick,
         onLoginClick = onLoginClick,

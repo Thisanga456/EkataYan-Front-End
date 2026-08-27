@@ -5,6 +5,14 @@ import androidx.navigation.compose.composable
 
 const val SIGN_UP_ROUTE = "signup"
 
-fun NavGraphBuilder.signUpScreen(onLoginClick: () -> Unit) {
-    composable(SIGN_UP_ROUTE) { SignUpRoute(onLoginClick = onLoginClick) }
+fun NavGraphBuilder.signUpScreen(
+    onSignUpClick: () -> Unit,
+    onLoginClick: () -> Unit,
+) {
+    composable(SIGN_UP_ROUTE) {
+        SignUpRoute(
+            onSignUpClick = onSignUpClick,
+            onLoginClick = onLoginClick,
+        )
+    }
 }

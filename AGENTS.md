@@ -33,7 +33,7 @@ Dependency versions are centralized in `gradle/libs.versions.toml`. Do not dupli
 - Features follow the established `FeatureNavigation.kt` -> `FeatureRoute.kt` -> `FeatureScreen.kt` -> `FeatureViewModel.kt` pattern.
 - Route composables obtain Hilt ViewModels and pass state plus event callbacks to screen composables. Keep screen composables independent of `NavController`; navigation is expressed through callbacks.
 - Keep UI state and user-event handling in the feature ViewModel when state must survive recomposition. Keep reusable, presentation-only composables stateless where practical.
-- The Sign Up screen is the current start destination. Home, Planner, Trips, Expenses, and Profile are presently placeholder-backed features.
+- The Login screen is the current start destination. Login and Sign Up are implemented authentication UI features; Home, Planner, Trips, Expenses, and Profile are presently placeholder-backed features.
 
 ## Project Structure
 
@@ -63,6 +63,7 @@ Add code to the narrowest appropriate feature or core package. Do not place feat
 - Preserve edge-to-edge safe-inset handling, responsive scrolling, and keyboard accessibility on form screens.
 - Prefer `dp` for layout and `sp` for text. Support different phone sizes and allow vertical scrolling where content can be obscured.
 - Separate static visual content from frequently changing form state when it improves recomposition or measurement performance without changing appearance.
+- Reuse the shared authentication primitives in `core/designsystem/component/AuthComponents.kt` for matching login/signup backgrounds, branding, fields, actions, dividers, and social buttons.
 - Use lightweight Compose controls when default Material minimum sizes prevent matching an approved design, while retaining usable semantics and interaction targets.
 - Avoid duplicate IME/system-bar inset handling, focus-triggered work, and unnecessary whole-screen recomposition. The current Activity configuration is `adjustResize`.
 
@@ -94,6 +95,8 @@ Add code to the narrowest appropriate feature or core package. Do not place feat
 - The established feature boundary is Navigation/Route/Screen/ViewModel.
 - Navigation remains callback-driven below the route/navigation layer.
 - Figma-based UI work should preserve supplied assets and responsive/keyboard-aware behavior.
+- Login and Sign Up share authentication presentation primitives and local assets; keep matching visuals centralized instead of duplicating them per feature.
+- Until backend authentication is introduced, the primary Login and Sign Up actions navigate to Home and clear authentication destinations from the back stack; the Login/Sign Up text links continue to navigate between those screens.
 
 ## Codex Working Rules
 
