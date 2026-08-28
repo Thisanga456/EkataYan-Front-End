@@ -41,7 +41,11 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
+<<<<<<< HEAD
+    implementation(libs.androidx.compose.material.icons.extended)
+=======
     implementation("androidx.compose.material:material-icons-extended")
+>>>>>>> 1257ee26b80974699c2aea34bbbc5523a950cbce
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
