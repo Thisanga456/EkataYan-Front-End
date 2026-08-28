@@ -39,11 +39,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ekatayan.app.core.designsystem.component.AppBottomNavItem
 import com.ekatayan.app.core.designsystem.component.AppBottomNavigation
+import com.ekatayan.app.core.designsystem.component.HeaderActions
+import com.ekatayan.app.core.designsystem.theme.EkataTextPrimary
 
 private val Blue = Color(0xFF3478F6)
 private val Green = Color(0xFF27AE60)
@@ -62,6 +65,8 @@ fun ProfileScreen(
     onPlannerClick: () -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit = {},
+    onNotificationClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -80,41 +85,34 @@ fun ProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White)
-                        .padding(20.dp)
                 ) {
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 21.dp, top = 47.dp, end = 14.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "My Profile",
-                            fontSize = 28.sp,
-                            color = Color.Black
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 27.sp,
+                            color = EkataTextPrimary,
+                            modifier = Modifier.weight(1f),
                         )
 
-                        Row {
-                            Icon(
-                                Icons.Outlined.Notifications,
-                                contentDescription = "Notifications",
-                                modifier = Modifier.size(25.dp)
-                            )
-
-                            Spacer(Modifier.width(18.dp))
-
-                            Icon(
-                                Icons.Outlined.Settings,
-                                contentDescription = "Settings",
-                                modifier = Modifier.size(25.dp)
-                            )
-                        }
+                        HeaderActions(
+                            onNotificationClick = onNotificationClick,
+                            onSettingsClick = onSettingsClick,
+                        )
                     }
 
                     Spacer(Modifier.height(16.dp))
 
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
 
                         Surface(
