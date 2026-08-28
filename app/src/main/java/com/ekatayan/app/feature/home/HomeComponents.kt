@@ -335,34 +335,3 @@ private fun EmptyMessage(text: String) {
         Text(text, fontSize = 13.sp, color = EkataTextSecondary)
     }
 }
-
-private data class BottomNavItem(val label: String, val icon: ImageVector)
-
-@Composable
-fun HomeBottomNavigation(selectedIndex: Int, onItemSelected: (Int) -> Unit, modifier: Modifier = Modifier) {
-    val items = listOf(
-        BottomNavItem("Home", Icons.Default.Home),
-        BottomNavItem("Trips", Icons.Outlined.Luggage),
-        BottomNavItem("AI Planner", Icons.Default.AutoAwesome),
-        BottomNavItem("Expenses", Icons.Default.AccountBalanceWallet),
-        BottomNavItem("Profile", Icons.Default.Person),
-    )
-    Row(
-        modifier = modifier.padding(start = 14.dp, end = 14.dp, bottom = 14.dp).fillMaxWidth().height(69.dp).shadow(9.dp, RoundedCornerShape(25.dp)).background(EkataNavigationBackground, RoundedCornerShape(25.dp)).padding(horizontal = 7.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        items.forEachIndexed { index, item ->
-            val selected = selectedIndex == index
-            Column(
-                modifier = Modifier.weight(1f).clickable { onItemSelected(index) },
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Box(Modifier.size(34.dp).background(if (selected) Color.White else Color.Transparent, CircleShape), contentAlignment = Alignment.Center) {
-                    Icon(item.icon, item.label, tint = if (selected) EkataTextPrimary else EkataTextSecondary, modifier = Modifier.size(20.dp))
-                }
-                Text(item.label, fontSize = 9.sp, fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal, maxLines = 1)
-            }
-        }
-    }
-}
