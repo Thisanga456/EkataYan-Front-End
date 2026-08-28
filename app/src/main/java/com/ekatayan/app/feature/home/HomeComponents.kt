@@ -77,6 +77,7 @@ import com.ekatayan.app.core.designsystem.theme.EkataLightBlue
 import com.ekatayan.app.core.designsystem.theme.EkataNavigationBackground
 import com.ekatayan.app.core.designsystem.theme.EkataTextPrimary
 import com.ekatayan.app.core.designsystem.theme.EkataTextSecondary
+import com.ekatayan.app.core.designsystem.component.HeaderActions
 
 @Composable
 fun HeroSection(
@@ -104,26 +105,17 @@ fun HeroSection(
             )
             Text("Where shall we explore today?", fontSize = 13.sp, color = EkataTextPrimary)
         }
-        Row(
+        HeaderActions(
+            onNotificationClick = onNotificationClick,
+            onSettingsClick = onSettingsClick,
             modifier = Modifier.align(Alignment.TopEnd).padding(top = 47.dp, end = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-            HeaderIcon(Icons.Default.NotificationsNone, "Notifications", onNotificationClick)
-            HeaderIcon(Icons.Default.Settings, "Settings", onSettingsClick)
-        }
+        )
         HomeSearchBar(
             query = searchQuery,
             onQueryChange = onSearchQueryChange,
             onSearchSubmit = onSearchSubmit,
             modifier = Modifier.align(Alignment.BottomCenter).padding(horizontal = 22.dp),
         )
-    }
-}
-
-@Composable
-private fun HeaderIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
-    IconButton(onClick = onClick, modifier = Modifier.size(38.dp)) {
-        Icon(icon, label, tint = EkataTextPrimary, modifier = Modifier.size(21.dp))
     }
 }
 
