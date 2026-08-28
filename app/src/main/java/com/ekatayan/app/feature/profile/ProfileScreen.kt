@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,6 +42,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ekatayan.app.core.designsystem.component.AppBottomNavItem
+import com.ekatayan.app.core.designsystem.component.AppBottomNavigation
 
 private val Blue = Color(0xFF3478F6)
 private val Green = Color(0xFF27AE60)
@@ -56,6 +57,11 @@ private val GreyText = Color(0xFF7B8191)
 fun ProfileScreen(
     title: String,
     onBackClick: () -> Unit,
+    onHomeClick: () -> Unit,
+    onTripsClick: () -> Unit,
+    onPlannerClick: () -> Unit,
+    onExpensesClick: () -> Unit,
+    onProfileClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -281,7 +287,14 @@ fun ProfileScreen(
             }
         }
 
-        BottomNavigation()
+        AppBottomNavigation(
+            selectedItem = AppBottomNavItem.PROFILE,
+            onHomeClick = onHomeClick,
+            onTripsClick = onTripsClick,
+            onPlannerClick = onPlannerClick,
+            onExpensesClick = onExpensesClick,
+            onProfileClick = onProfileClick,
+        )
     }
 }
 
@@ -386,51 +399,3 @@ private fun ProfileItem(
     }
 }
 
-@Composable
-private fun BottomNavigation() {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        shape = RoundedCornerShape(20.dp),
-        color = Color(0xFFE0E0E0)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 9.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-
-            BottomItem(Icons.Outlined.Person, "Home")
-            BottomItem(Icons.Outlined.BusinessCenter, "Trips")
-            BottomItem(Icons.Outlined.TravelExplore, "AI Planner")
-            BottomItem(Icons.Outlined.CreditCard, "Expenses")
-            BottomItem(Icons.Outlined.Person, "Profile")
-        }
-    }
-}
-
-@Composable
-private fun BottomItem(
-    icon: ImageVector,
-    label: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(58.dp)
-    ) {
-        Icon(
-            icon,
-            contentDescription = label,
-            modifier = Modifier.size(21.dp),
-            tint = Color.Black
-        )
-
-        Text(
-            label,
-            fontSize = 8.sp,
-            color = Color.Black
-        )
-    }
-}

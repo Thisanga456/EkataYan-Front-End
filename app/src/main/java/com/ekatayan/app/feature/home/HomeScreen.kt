@@ -10,10 +10,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ekatayan.app.core.designsystem.theme.EkataBackground
 import com.ekatayan.app.core.designsystem.theme.EkataYanTheme
+import com.ekatayan.app.core.designsystem.component.AppBottomNavItem
+import com.ekatayan.app.core.designsystem.component.AppBottomNavigation
 
 @Composable
 fun HomeScreen(
@@ -44,7 +42,6 @@ fun HomeScreen(
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var selectedNavItem by rememberSaveable { mutableIntStateOf(0) }
     Box(modifier.fillMaxSize().background(EkataBackground)) {
         if (uiState.isLoading) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
@@ -74,18 +71,13 @@ fun HomeScreen(
                 item { PopularDestinationsSection(uiState.popularDestinations, onPopularDestinationClick) }
             }
         }
-        HomeBottomNavigation(
-            selectedIndex = selectedNavItem,
-            onItemSelected = { index ->
-                selectedNavItem = index
-                when (index) {
-                    0 -> onHomeClick()
-                    1 -> onTripsClick()
-                    2 -> onPlannerClick()
-                    3 -> onExpensesClick()
-                    4 -> onProfileClick()
-                }
-            },
+        AppBottomNavigation(
+            selectedItem = AppBottomNavItem.HOME,
+            onHomeClick = onHomeClick,
+            onTripsClick = onTripsClick,
+            onPlannerClick = onPlannerClick,
+            onExpensesClick = onExpensesClick,
+            onProfileClick = onProfileClick,
             modifier = Modifier.align(Alignment.BottomCenter),
         )
     }
