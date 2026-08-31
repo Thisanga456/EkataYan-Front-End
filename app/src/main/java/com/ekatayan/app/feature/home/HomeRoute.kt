@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun HomeRoute(
+    onWishlistClick: () -> Unit,
     onPlannerClick: () -> Unit,
     onTripsClick: () -> Unit,
     onExpensesClick: () -> Unit,
@@ -18,6 +19,7 @@ fun HomeRoute(
         uiState = uiState,
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onSearchSubmit = viewModel::onSearchSubmit,
+        onWishlistClick = onWishlistClick,
         onPlannerClick = onPlannerClick,
         onTripsClick = onTripsClick,
         onExpensesClick = onExpensesClick,

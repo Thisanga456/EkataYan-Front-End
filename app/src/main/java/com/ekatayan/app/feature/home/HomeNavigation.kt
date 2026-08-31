@@ -6,12 +6,13 @@ import androidx.navigation.compose.composable
 const val HOME_ROUTE = "home"
 
 fun NavGraphBuilder.homeScreen(
+    onWishlistClick: () -> Unit,
     onPlannerClick: () -> Unit,
     onTripsClick: () -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
 ) {
     composable(HOME_ROUTE) {
-        HomeRoute(onPlannerClick, onTripsClick, onExpensesClick, onProfileClick)
+        HomeRoute(onWishlistClick, onPlannerClick, onTripsClick, onExpensesClick, onProfileClick)
     }
 }
