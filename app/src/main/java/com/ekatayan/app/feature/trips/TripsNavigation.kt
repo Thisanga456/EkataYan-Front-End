@@ -5,6 +5,14 @@ import androidx.navigation.compose.composable
 
 const val TRIPS_ROUTE = "trips"
 
-fun NavGraphBuilder.tripsScreen(onBackClick: () -> Unit) {
-    composable(TRIPS_ROUTE) { TripsRoute(onBackClick = onBackClick) }
+fun NavGraphBuilder.tripsScreen(
+    onHomeClick: () -> Unit,
+    onTripsClick: () -> Unit,
+    onPlannerClick: () -> Unit,
+    onExpensesClick: () -> Unit,
+    onProfileClick: () -> Unit,
+) {
+    composable(TRIPS_ROUTE) {
+        TripsRoute(onHomeClick, onTripsClick, onPlannerClick, onExpensesClick, onProfileClick)
+    }
 }

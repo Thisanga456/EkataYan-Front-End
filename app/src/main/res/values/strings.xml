@@ -28,4 +28,21 @@
     <string name="login_action">Log In</string>
     <string name="login_new_account">Don’t have an account? </string>
     <string name="login_signup">Sign Up</string>
+    <string name="trips_title">My Trips</string>
+    <string name="trips_add">Add trip</string>
+    <string name="trips_previous_month">Previous month</string>
+    <string name="trips_next_month">Next month</string>
+    <string name="trips_timeline">Trips Timeline</string>
+    <string name="trips_see_all">See All &gt;</string>
+    <string name="trips_open_trip">Open trip</string>
+    <string name="trip_status_upcoming">Upcoming</string>
+    <string name="trip_status_planned">Planned</string>
+    <string name="trip_galle_name">Galle Getaway</string>
+    <string name="trip_galle_location">Galle, Sri Lanka</string>
+    <string name="trip_kandy_name">Kandy Escape</string>
+    <string name="trip_kandy_location">Kandy, Sri Lanka</string>
+    <string name="trip_sigiriya_name">Sigiriya Adventure</string>
+    <string name="trip_sigiriya_location">Sigiriya, Sri Lanka</string>
+    <string name="trip_nuwara_eliya_name">Nuwara Eliya Retreat</string>
+    <string name="trip_nuwara_eliya_location">Nuwara Eliya, Sri Lanka</string>
 </resources>

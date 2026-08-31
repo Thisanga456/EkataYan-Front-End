@@ -33,7 +33,7 @@ Dependency versions are centralized in `gradle/libs.versions.toml`. Do not dupli
 - Features follow the established `FeatureNavigation.kt` -> `FeatureRoute.kt` -> `FeatureScreen.kt` -> `FeatureViewModel.kt` pattern.
 - Route composables obtain Hilt ViewModels and pass state plus event callbacks to screen composables. Keep screen composables independent of `NavController`; navigation is expressed through callbacks.
 - Keep UI state and user-event handling in the feature ViewModel when state must survive recomposition. Keep reusable, presentation-only composables stateless where practical.
-- The Login screen is the current start destination. Login and Sign Up are implemented authentication UI features; Home, Planner, Trips, Expenses, and Profile are presently placeholder-backed features.
+- The Login screen is the current start destination. Login and Sign Up are implemented authentication UI features; Home, Trips, and Profile are implemented UI features, while Planner and Expenses are presently placeholder-backed features.
 
 ## Project Structure
 

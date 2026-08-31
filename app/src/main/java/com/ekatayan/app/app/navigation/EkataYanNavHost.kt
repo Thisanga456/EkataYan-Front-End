@@ -44,7 +44,13 @@ fun EkataYanNavHost(
             onProfileClick = { navController.navigate(PROFILE_ROUTE) },
         )
         plannerScreen(onBackClick = navController::navigateUp)
-        tripsScreen(onBackClick = navController::navigateUp)
+        tripsScreen(
+            onHomeClick = { navController.navigate(HOME_ROUTE) },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) { launchSingleTop = true } },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+        )
         expensesScreen(onBackClick = navController::navigateUp)
         profileScreen(
             onBackClick = navController::navigateUp,
