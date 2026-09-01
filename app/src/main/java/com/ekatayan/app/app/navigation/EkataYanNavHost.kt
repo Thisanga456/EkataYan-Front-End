@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ekatayan.app.feature.expenses.EXPENSES_ROUTE
 import com.ekatayan.app.feature.expenses.expensesScreen
 import com.ekatayan.app.feature.home.HOME_ROUTE
@@ -17,13 +18,20 @@ import com.ekatayan.app.feature.profile.profileScreen
 import com.ekatayan.app.feature.signup.SIGN_UP_ROUTE
 import com.ekatayan.app.feature.signup.signUpScreen
 import com.ekatayan.app.feature.trips.TRIPS_ROUTE
+
 import com.ekatayan.app.feature.trips.tripsScreen
+import com.ekatayan.app.feature.wishlist.WISHLIST_ROUTE
+import com.ekatayan.app.feature.wishlist.WishlistViewModel
+import com.ekatayan.app.feature.wishlist.wishlistGroupRoute
+import com.ekatayan.app.feature.wishlist.wishlistScreens
 
 @Composable
 fun EkataYanNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    val wishlistViewModel: WishlistViewModel = hiltViewModel()
+
     NavHost(
         navController = navController,
         startDestination = LOGIN_ROUTE,
@@ -38,6 +46,7 @@ fun EkataYanNavHost(
             onLoginClick = navController::navigateToLogin,
         )
         homeScreen(
+            onWishlistClick = { navController.navigate(WISHLIST_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
@@ -52,6 +61,16 @@ fun EkataYanNavHost(
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+        )
+        wishlistScreens(
+            viewModel = wishlistViewModel,
+            onGroupClick = { navController.navigate(wishlistGroupRoute(it)) },
+            onBackClick = navController::navigateUp,
+            onHomeClick = { navController.navigate(HOME_ROUTE) { launchSingleTop = true } },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
         )
     }
 }
