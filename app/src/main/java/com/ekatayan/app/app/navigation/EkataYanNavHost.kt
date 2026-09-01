@@ -9,6 +9,11 @@ import com.ekatayan.app.feature.expenses.EXPENSES_ROUTE
 import com.ekatayan.app.feature.expenses.expensesScreen
 import com.ekatayan.app.feature.home.HOME_ROUTE
 import com.ekatayan.app.feature.home.homeScreen
+import com.ekatayan.app.feature.grouphub.GROUP_HUB_ROUTE
+import com.ekatayan.app.feature.grouphub.GroupHubViewModel
+import com.ekatayan.app.feature.grouphub.groupChatRoute
+import com.ekatayan.app.feature.grouphub.groupHubScreens
+import com.ekatayan.app.feature.grouphub.groupInfoRoute
 import com.ekatayan.app.feature.login.LOGIN_ROUTE
 import com.ekatayan.app.feature.login.loginScreen
 import com.ekatayan.app.feature.planner.PLANNER_ROUTE
@@ -31,6 +36,7 @@ fun EkataYanNavHost(
     modifier: Modifier = Modifier,
 ) {
     val wishlistViewModel: WishlistViewModel = hiltViewModel()
+    val groupHubViewModel: GroupHubViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -46,6 +52,7 @@ fun EkataYanNavHost(
             onLoginClick = navController::navigateToLogin,
         )
         homeScreen(
+            onGroupHubClick = { navController.navigate(GROUP_HUB_ROUTE) },
             onWishlistClick = { navController.navigate(WISHLIST_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
@@ -66,6 +73,18 @@ fun EkataYanNavHost(
             viewModel = wishlistViewModel,
             onGroupClick = { navController.navigate(wishlistGroupRoute(it)) },
             onBackClick = navController::navigateUp,
+            onHomeClick = { navController.navigate(HOME_ROUTE) { launchSingleTop = true } },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+        )
+        groupHubScreens(
+            viewModel = groupHubViewModel,
+            onGroupClick = { navController.navigate(groupChatRoute(it)) },
+            onInfoClick = { navController.navigate(groupInfoRoute(it)) },
+            onBackClick = navController::navigateUp,
+            onRemoved = { navController.popBackStack(GROUP_HUB_ROUTE, inclusive = false) },
             onHomeClick = { navController.navigate(HOME_ROUTE) { launchSingleTop = true } },
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
