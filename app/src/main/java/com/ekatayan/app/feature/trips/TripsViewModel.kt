@@ -15,19 +15,36 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @HiltViewModel
-class TripsViewModel @Inject constructor() : ViewModel() {
-    private val _uiState = MutableStateFlow(createTripsUiState(LocalDate.now()))
+class TripsViewModel @Inject constructor(private val repository: TripsRepository) : ViewModel() {
+    private val today = LocalDate.now()
+    private val _uiState = MutableStateFlow(createTripsUiState(today).copy(trips = repository.trips.value))
     val uiState: StateFlow<TripsUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             while (isActive) {
                 val today = LocalDate.now()
-                _uiState.update { state -> if (state.today == today) state else state.copy(today = today) }
+                _uiState.update { it.copy(today = today, trips = repository.trips.value) }
                 val nextDay = today.plusDays(1).atStartOfDay()
                 delay(Duration.between(java.time.LocalDateTime.now(), nextDay).toMillis().coerceAtLeast(1L))
+            }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            repository.trips.collect { trips ->
+                _uiState.update { state ->
+                    val newTrip = trips.firstOrNull { trip -> state.trips.none { it.id == trip.id } }
+                    state.copy(
+                        trips = trips.sortedBy { it.startDate },
+                        displayedMonth = newTrip?.let { YearMonth.from(it.startDate) } ?: state.displayedMonth,
+                        selectedDate = newTrip?.startDate ?: state.selectedDate,
+                    )
+                }
             }
         }
     }
@@ -39,9 +56,18 @@ class TripsViewModel @Inject constructor() : ViewModel() {
     fun showNextMonth() {
         _uiState.update { it.copy(displayedMonth = it.displayedMonth.plusMonths(1)) }
     }
+
+    fun selectDate(date: LocalDate) {
+        _uiState.update { it.copy(selectedDate = date) }
+    }
 }
 
-data class TripsUiState(val displayedMonth: YearMonth, val today: LocalDate, val trips: List<Trip>)
+data class TripsUiState(
+    val displayedMonth: YearMonth,
+    val today: LocalDate,
+    val trips: List<Trip>,
+    val selectedDate: LocalDate? = today,
+)
 
 data class Trip(
     val id: Int,
@@ -51,7 +77,23 @@ data class Trip(
     val startDate: LocalDate,
     val endDate: LocalDate,
     val imageRes: Int,
+    val customName: String? = null,
+    val customLocation: String? = null,
+    val budget: String? = null,
+    val notes: String? = null,
 )
+
+@Singleton
+class TripsRepository @Inject constructor() {
+    private val initialTrips = createTripsUiState(LocalDate.now()).trips
+    private val _trips = MutableStateFlow(initialTrips)
+    val trips: StateFlow<List<Trip>> = _trips.asStateFlow()
+
+    fun addTrip(name: String, destination: String, startDate: LocalDate, endDate: LocalDate, budget: String, notes: String) {
+        val nextId = (_trips.value.maxOfOrNull { it.id } ?: 0) + 1
+        _trips.update { it + Trip(nextId, 0, 0, R.string.trip_status_planned, startDate, endDate, R.drawable.galle, name, destination, budget.ifBlank { null }, notes.ifBlank { null }) }
+    }
+}
 
 private fun createTripsUiState(today: LocalDate) = TripsUiState(
     displayedMonth = YearMonth.from(today),
@@ -63,6 +105,12 @@ private fun createTripsUiState(today: LocalDate) = TripsUiState(
         Trip(4, R.string.trip_nuwara_eliya_name, R.string.trip_nuwara_eliya_location, R.string.trip_status_planned, today.plusDays(40), today.plusDays(43), R.drawable.nine_arch_bridge),
     ),
 )
+
+fun Trip.statusFor(today: LocalDate): Int = when {
+    today.isBefore(startDate) -> R.string.trip_status_upcoming
+    today.isAfter(endDate) -> R.string.trip_status_past
+    else -> R.string.trip_status_ongoing
+}
 
 internal fun calendarMonthGrid(month: YearMonth): List<LocalDate?> {
     val leadingEmptyDays = month.atDay(1).dayOfWeek.value - 1

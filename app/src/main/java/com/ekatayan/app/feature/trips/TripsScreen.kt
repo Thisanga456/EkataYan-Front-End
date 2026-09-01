@@ -68,6 +68,7 @@ fun TripsScreen(
     uiState: TripsUiState,
     onPreviousMonthClick: () -> Unit,
     onNextMonthClick: () -> Unit,
+    onDateClick: (LocalDate) -> Unit,
     onHomeClick: () -> Unit,
     onTripsClick: () -> Unit,
     onPlannerClick: () -> Unit,
@@ -90,12 +91,14 @@ fun TripsScreen(
                     trips = uiState.trips,
                     onPreviousMonthClick = onPreviousMonthClick,
                     onNextMonthClick = onNextMonthClick,
+                    selectedDate = uiState.selectedDate,
+                    onDateClick = onDateClick,
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
                 )
             }
             item { TimelineHeader(onSeeAllClick) }
             items(uiState.trips, key = { it.id }) { trip ->
-                TripTimelineCard(trip, { onTripClick(trip) }, Modifier.padding(horizontal = 20.dp, vertical = 6.dp))
+                TripTimelineCard(trip, { onTripClick(trip) }, uiState.today, Modifier.padding(horizontal = 20.dp, vertical = 6.dp))
             }
         }
         AppBottomNavigation(
@@ -130,8 +133,10 @@ private fun MonthCalendar(
     month: YearMonth,
     today: LocalDate,
     trips: List<Trip>,
+    selectedDate: LocalDate?,
     onPreviousMonthClick: () -> Unit,
     onNextMonthClick: () -> Unit,
+    onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -158,7 +163,7 @@ private fun MonthCalendar(
             }
             Spacer(Modifier.height(8.dp))
             CalendarWeekdayRow()
-            CalendarDays(month, today, trips)
+            CalendarDays(month, today, selectedDate, trips, onDateClick)
         }
     }
 }
@@ -179,34 +184,53 @@ private fun CalendarWeekdayRow() {
 }
 
 @Composable
-private fun CalendarDays(month: YearMonth, today: LocalDate, trips: List<Trip>) {
+private fun CalendarDays(
+    month: YearMonth,
+    today: LocalDate,
+    selectedDate: LocalDate?,
+    trips: List<Trip>,
+    onDateClick: (LocalDate) -> Unit,
+) {
     Column(Modifier.padding(top = 4.dp)) {
         calendarMonthGrid(month).chunked(7).forEach { week ->
             Row(Modifier.fillMaxWidth()) {
-                week.forEach { date -> CalendarDay(date, today, trips, Modifier.weight(1f)) }
+                week.forEach { date -> CalendarDay(date, today, selectedDate, trips, onDateClick, Modifier.weight(1f)) }
             }
         }
     }
 }
 
 @Composable
-private fun CalendarDay(date: LocalDate?, today: LocalDate, trips: List<Trip>, modifier: Modifier = Modifier) {
+private fun CalendarDay(
+    date: LocalDate?,
+    today: LocalDate,
+    selectedDate: LocalDate?,
+    trips: List<Trip>,
+    onDateClick: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val isToday = date == today
-    val hasTrip = date != null && trips.any { !date.isBefore(it.startDate) && !date.isAfter(it.endDate) }
-    Box(modifier = modifier.aspectRatio(1f).padding(2.dp), contentAlignment = Alignment.Center) {
+    val trip = date?.let { day -> trips.firstOrNull { !day.isBefore(it.startDate) && !day.isAfter(it.endDate) } }
+    val hasTrip = trip != null
+    val isSelected = date != null && date == selectedDate
+    val isStart = date != null && trip?.startDate == date
+    val isEnd = date != null && trip?.endDate == date
+    Box(
+        modifier = modifier.aspectRatio(1f).padding(2.dp).then(
+            if (date != null) Modifier.clickable { onDateClick(date) } else Modifier
+        ),
+        contentAlignment = Alignment.Center,
+    ) {
         if (date != null) {
-            val background = when {
-                isToday -> EkataBlue
-                hasTrip -> Color.White.copy(alpha = 0.8f)
-                else -> Color.Transparent
-            }
+            val background = when { isToday -> EkataBlue; isSelected -> Color.White; hasTrip -> Color.White.copy(alpha = 0.8f); else -> Color.Transparent }
+            val shape = when { isStart && isEnd -> RoundedCornerShape(50); isStart -> RoundedCornerShape(topStart = 50.dp, bottomStart = 50.dp); isEnd -> RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp); hasTrip -> RoundedCornerShape(0.dp); else -> CircleShape }
             Text(
                 date.dayOfMonth.toString(),
                 color = if (isToday) Color.White else EkataTextPrimary,
                 fontSize = 12.sp,
-                fontWeight = if (isToday || hasTrip) FontWeight.SemiBold else FontWeight.Normal,
+                fontWeight = if (isToday || hasTrip || isSelected) FontWeight.SemiBold else FontWeight.Normal,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.background(background, CircleShape).padding(horizontal = 7.dp, vertical = 5.dp),
+                modifier = Modifier.fillMaxWidth().background(background, shape).padding(vertical = 5.dp),
             )
         }
     }
@@ -230,7 +254,7 @@ private fun TimelineHeader(onSeeAllClick: () -> Unit) {
 }
 
 @Composable
-fun TripTimelineCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun TripTimelineCard(trip: Trip, onClick: () -> Unit, today: LocalDate = LocalDate.now(), modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(20.dp),
@@ -240,7 +264,7 @@ fun TripTimelineCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modif
         Row(Modifier.height(116.dp).padding(11.dp), verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painterResource(trip.imageRes),
-                stringResource(trip.nameRes),
+                trip.customName ?: if (trip.nameRes != 0) stringResource(trip.nameRes) else "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(94.dp).clip(RoundedCornerShape(14.dp)),
             )
@@ -248,15 +272,15 @@ fun TripTimelineCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modif
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
                 Text(tripDateRange(trip.startDate, trip.endDate), color = EkataBlue, fontSize = 11.sp, fontWeight = FontWeight.Medium)
                 Spacer(Modifier.height(4.dp))
-                Text(stringResource(trip.nameRes), fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(trip.customName ?: stringResource(trip.nameRes), fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Spacer(Modifier.height(5.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Outlined.LocationOn, null, tint = EkataTextSecondary, modifier = Modifier.size(14.dp))
                     Spacer(Modifier.width(3.dp))
-                    Text(stringResource(trip.locationRes), color = EkataTextSecondary, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(trip.customLocation ?: stringResource(trip.locationRes), color = EkataTextSecondary, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 Spacer(Modifier.height(7.dp))
-                TripStatus(trip.statusRes)
+                TripStatus(trip.statusFor(today))
             }
             Icon(Icons.Outlined.ArrowForwardIos, stringResource(R.string.trips_open_trip), tint = EkataTextSecondary, modifier = Modifier.size(15.dp))
         }

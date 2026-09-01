@@ -37,6 +37,10 @@
     <string name="trips_open_trip">Open trip</string>
     <string name="trip_status_upcoming">Upcoming</string>
     <string name="trip_status_planned">Planned</string>
+    <string name="trip_status_ongoing">Ongoing</string>
+    <string name="trip_status_past">Past</string>
+    <string name="trip_details_title">Trip Details</string>
+    <string name="trip_details_missing">This trip is no longer available.</string>
     <string name="trip_galle_name">Galle Getaway</string>
     <string name="trip_galle_location">Galle, Sri Lanka</string>
     <string name="trip_kandy_name">Kandy Escape</string>
@@ -45,4 +49,20 @@
     <string name="trip_sigiriya_location">Sigiriya, Sri Lanka</string>
     <string name="trip_nuwara_eliya_name">Nuwara Eliya Retreat</string>
     <string name="trip_nuwara_eliya_location">Nuwara Eliya, Sri Lanka</string>
+    <string name="create_trip_title">Plan a New Trip</string>
+    <string name="create_trip_name">Trip name</string>
+    <string name="create_trip_destination">Destination</string>
+    <string name="create_trip_start_date">Start date</string>
+    <string name="create_trip_end_date">End date</string>
+    <string name="create_trip_budget">Budget (optional)</string>
+    <string name="create_trip_notes">Notes (optional)</string>
+    <string name="create_trip_save">Save Trip</string>
+    <string name="create_trip_back">Back</string>
+    <string name="create_trip_ok">OK</string>
+    <string name="create_trip_cancel">Cancel</string>
+    <string name="create_trip_name_required">Trip name is required</string>
+    <string name="create_trip_destination_required">Destination is required</string>
+    <string name="create_trip_dates_required">Select start and end dates</string>
+    <string name="create_trip_date_range_invalid">Start date cannot be after end date</string>
+    <string name="create_trip_budget_invalid">Budget must be a valid number</string>
 </resources>
