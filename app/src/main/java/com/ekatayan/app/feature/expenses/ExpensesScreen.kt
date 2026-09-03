@@ -42,6 +42,9 @@ fun ExpensesScreen(
     onTripsClick: () -> Unit,
     onPlannerClick: () -> Unit,
     onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    hasUnreadNotifications: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -55,7 +58,7 @@ fun ExpensesScreen(
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item { Header() }
+            item { Header(onNotificationClick, onSettingsClick, hasUnreadNotifications) }
             item { BudgetCard(uiState.budget) }
             item { SpendingCard(uiState.categories, uiState.budget.totalSpent) }
             item { QuickActions(uiState.quickActions) }
@@ -65,10 +68,10 @@ fun ExpensesScreen(
     }
 }
 
-@Composable private fun Header() = Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+@Composable private fun Header(onNotificationClick: () -> Unit, onSettingsClick: () -> Unit, hasUnreadNotifications: Boolean) = Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
     Icon(Icons.Default.AccountBalanceWallet, null, tint = Color.Black, modifier = Modifier.size(27.dp))
     Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.expenses_title), fontSize = 29.sp, fontWeight = FontWeight.Medium)
-    Spacer(Modifier.weight(1f)); HeaderActions({}, {})
+    Spacer(Modifier.weight(1f)); HeaderActions(onNotificationClick = onNotificationClick, onSettingsClick = onSettingsClick, hasUnreadNotifications = hasUnreadNotifications)
 }
 
 @Composable private fun BudgetCard(data: BudgetSummary) = CardSection {

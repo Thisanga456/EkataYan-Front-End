@@ -8,6 +8,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ekatayan.app.feature.notifications.NotificationsUiState
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -19,8 +22,12 @@ fun WishlistRoute(
     onPlannerClick: () -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    notificationsUiState: StateFlow<NotificationsUiState>,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val notificationState by notificationsUiState.collectAsStateWithLifecycle()
     WishlistScreen(
         uiState = uiState,
         onGroupClick = onGroupClick,
@@ -34,6 +41,9 @@ fun WishlistRoute(
         onPlannerClick = onPlannerClick,
         onExpensesClick = onExpensesClick,
         onProfileClick = onProfileClick,
+        onSettingsClick = onSettingsClick,
+        onNotificationClick = onNotificationClick,
+        hasUnreadNotifications = notificationState.hasUnreadNotifications,
     )
 }
 
@@ -48,8 +58,12 @@ fun WishlistGroupDetailsRoute(
     onPlannerClick: () -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    notificationsUiState: StateFlow<NotificationsUiState>,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val notificationState by notificationsUiState.collectAsStateWithLifecycle()
     val group = uiState.groups.find { it.id == groupId }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -83,5 +97,8 @@ fun WishlistGroupDetailsRoute(
         onPlannerClick = onPlannerClick,
         onExpensesClick = onExpensesClick,
         onProfileClick = onProfileClick,
+        onSettingsClick = onSettingsClick,
+        onNotificationClick = onNotificationClick,
+        hasUnreadNotifications = notificationState.hasUnreadNotifications,
     )
 }

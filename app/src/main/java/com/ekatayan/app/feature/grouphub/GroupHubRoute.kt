@@ -4,11 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ekatayan.app.feature.notifications.NotificationsUiState
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun GroupHubRoute(viewModel: GroupHubViewModel, onGroupClick: (String) -> Unit, onHomeClick: () -> Unit, onTripsClick: () -> Unit, onPlannerClick: () -> Unit, onExpensesClick: () -> Unit, onProfileClick: () -> Unit) {
+fun GroupHubRoute(viewModel: GroupHubViewModel, onGroupClick: (String) -> Unit, onHomeClick: () -> Unit, onTripsClick: () -> Unit, onPlannerClick: () -> Unit, onExpensesClick: () -> Unit, onProfileClick: () -> Unit, onSettingsClick: () -> Unit, onNotificationClick: () -> Unit, notificationsUiState: StateFlow<NotificationsUiState>) {
     val state by viewModel.uiState.collectAsState()
-    GroupHubScreen(state, onGroupClick, viewModel::createGroup, onHomeClick, onTripsClick, onPlannerClick, onExpensesClick, onProfileClick)
+    val notificationState by notificationsUiState.collectAsStateWithLifecycle()
+    GroupHubScreen(state, onGroupClick, viewModel::createGroup, onHomeClick, onTripsClick, onPlannerClick, onExpensesClick, onProfileClick, onSettingsClick, onNotificationClick, notificationState.hasUnreadNotifications)
 }
 
 @Composable
