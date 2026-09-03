@@ -61,7 +61,12 @@ fun EkataYanNavHost(
         )
         plannerScreen(onBackClick = navController::navigateUp)
         tripsScreen(onBackClick = navController::navigateUp)
-        expensesScreen(onBackClick = navController::navigateUp)
+        expensesScreen(
+            onHomeClick = { navController.navigate(HOME_ROUTE) },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+        )
         profileScreen(
             onBackClick = navController::navigateUp,
             onHomeClick = { navController.navigate(HOME_ROUTE) },

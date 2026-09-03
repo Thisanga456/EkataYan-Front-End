@@ -5,8 +5,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun ExpensesRoute(
-    onBackClick: () -> Unit,
+    onHomeClick: () -> Unit,
+    onTripsClick: () -> Unit,
+    onPlannerClick: () -> Unit,
+    onProfileClick: () -> Unit,
     viewModel: ExpensesViewModel = hiltViewModel(),
-) {
-    ExpensesScreen(title = viewModel.title, onBackClick = onBackClick)
-}
+) = ExpensesScreen(viewModel.uiState, onHomeClick, onTripsClick, onPlannerClick, onProfileClick)
