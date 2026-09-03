@@ -4,28 +4,59 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ekatayan.app.feature.expenses.EXPENSES_ROUTE
 import com.ekatayan.app.feature.expenses.expensesScreen
 import com.ekatayan.app.feature.home.HOME_ROUTE
 import com.ekatayan.app.feature.home.homeScreen
+import com.ekatayan.app.feature.grouphub.GROUP_HUB_ROUTE
+import com.ekatayan.app.feature.grouphub.GroupHubViewModel
+import com.ekatayan.app.feature.grouphub.groupChatRoute
+import com.ekatayan.app.feature.grouphub.groupHubScreens
+import com.ekatayan.app.feature.grouphub.groupInfoRoute
+import com.ekatayan.app.feature.login.LOGIN_ROUTE
+import com.ekatayan.app.feature.login.loginScreen
 import com.ekatayan.app.feature.planner.PLANNER_ROUTE
 import com.ekatayan.app.feature.planner.plannerScreen
 import com.ekatayan.app.feature.profile.PROFILE_ROUTE
 import com.ekatayan.app.feature.profile.profileScreen
+import com.ekatayan.app.feature.signup.SIGN_UP_ROUTE
+import com.ekatayan.app.feature.signup.signUpScreen
+import com.ekatayan.app.feature.splash.SPLASH_ROUTE
+import com.ekatayan.app.feature.splash.splashScreen
 import com.ekatayan.app.feature.trips.TRIPS_ROUTE
+
 import com.ekatayan.app.feature.trips.tripsScreen
+import com.ekatayan.app.feature.wishlist.WISHLIST_ROUTE
+import com.ekatayan.app.feature.wishlist.WishlistViewModel
+import com.ekatayan.app.feature.wishlist.wishlistGroupRoute
+import com.ekatayan.app.feature.wishlist.wishlistScreens
 
 @Composable
 fun EkataYanNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    val wishlistViewModel: WishlistViewModel = hiltViewModel()
+    val groupHubViewModel: GroupHubViewModel = hiltViewModel()
+
     NavHost(
         navController = navController,
-        startDestination = HOME_ROUTE,
+        startDestination = SPLASH_ROUTE,
         modifier = modifier,
     ) {
+        splashScreen(onSplashFinished = navController::navigateToLoginFromSplash)
+        loginScreen(
+            onLogInClick = navController::navigateHomeFromAuth,
+            onSignUpClick = navController::navigateToSignUp,
+        )
+        signUpScreen(
+            onSignUpClick = navController::navigateHomeFromAuth,
+            onLoginClick = navController::navigateToLogin,
+        )
         homeScreen(
+            onGroupHubClick = { navController.navigate(GROUP_HUB_ROUTE) },
+            onWishlistClick = { navController.navigate(WISHLIST_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
@@ -33,7 +64,65 @@ fun EkataYanNavHost(
         )
         plannerScreen(onBackClick = navController::navigateUp)
         tripsScreen(onBackClick = navController::navigateUp)
-        expensesScreen(onBackClick = navController::navigateUp)
-        profileScreen(onBackClick = navController::navigateUp)
+        expensesScreen(
+            onHomeClick = { navController.navigate(HOME_ROUTE) },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+        )
+        profileScreen(
+            onBackClick = navController::navigateUp,
+            onHomeClick = { navController.navigate(HOME_ROUTE) },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+        )
+        wishlistScreens(
+            viewModel = wishlistViewModel,
+            onGroupClick = { navController.navigate(wishlistGroupRoute(it)) },
+            onBackClick = navController::navigateUp,
+            onHomeClick = { navController.navigate(HOME_ROUTE) { launchSingleTop = true } },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+        )
+        groupHubScreens(
+            viewModel = groupHubViewModel,
+            onGroupClick = { navController.navigate(groupChatRoute(it)) },
+            onInfoClick = { navController.navigate(groupInfoRoute(it)) },
+            onBackClick = navController::navigateUp,
+            onRemoved = { navController.popBackStack(GROUP_HUB_ROUTE, inclusive = false) },
+            onHomeClick = { navController.navigate(HOME_ROUTE) { launchSingleTop = true } },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+        )
+    }
+}
+
+private fun NavHostController.navigateToSignUp() {
+    navigate(SIGN_UP_ROUTE) { launchSingleTop = true }
+}
+
+private fun NavHostController.navigateToLoginFromSplash() {
+    navigate(LOGIN_ROUTE) {
+        popUpTo(SPLASH_ROUTE) { inclusive = true }
+        launchSingleTop = true
+    }
+}
+
+private fun NavHostController.navigateToLogin() {
+    navigate(LOGIN_ROUTE) {
+        popUpTo(LOGIN_ROUTE)
+        launchSingleTop = true
+    }
+}
+
+private fun NavHostController.navigateHomeFromAuth() {
+    navigate(HOME_ROUTE) {
+        popUpTo(LOGIN_ROUTE) { inclusive = true }
+        launchSingleTop = true
     }
 }

@@ -5,6 +5,11 @@ import androidx.navigation.compose.composable
 
 const val EXPENSES_ROUTE = "expenses"
 
-fun NavGraphBuilder.expensesScreen(onBackClick: () -> Unit) {
-    composable(EXPENSES_ROUTE) { ExpensesRoute(onBackClick = onBackClick) }
+fun NavGraphBuilder.expensesScreen(
+    onHomeClick: () -> Unit,
+    onTripsClick: () -> Unit,
+    onPlannerClick: () -> Unit,
+    onProfileClick: () -> Unit,
+) {
+    composable(EXPENSES_ROUTE) { ExpensesRoute(onHomeClick, onTripsClick, onPlannerClick, onProfileClick) }
 }
