@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ekatayan.app.feature.expenses.EXPENSES_ROUTE
 import com.ekatayan.app.feature.expenses.expensesScreen
+import com.ekatayan.app.feature.booking.BOOKING_ROUTE
+import com.ekatayan.app.feature.booking.bookingScreen
 import com.ekatayan.app.feature.home.HOME_ROUTE
 import com.ekatayan.app.feature.home.homeScreen
 import com.ekatayan.app.feature.grouphub.GROUP_HUB_ROUTE
@@ -57,8 +59,16 @@ fun EkataYanNavHost(
         homeScreen(
             onGroupHubClick = { navController.navigate(GROUP_HUB_ROUTE) },
             onWishlistClick = { navController.navigate(WISHLIST_ROUTE) },
+            onBookingClick = { navController.navigate(BOOKING_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+        )
+        bookingScreen(
+            onHomeClick = { navController.navigate(HOME_ROUTE) },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
             onProfileClick = { navController.navigate(PROFILE_ROUTE) },
         )

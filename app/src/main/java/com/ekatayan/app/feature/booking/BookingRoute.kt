@@ -1,4 +1,4 @@
-package com.ekatayan.app.feature.home
+package com.ekatayan.app.feature.booking
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -6,26 +6,26 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
-fun HomeRoute(
-    onWishlistClick: () -> Unit,
-    onGroupHubClick: () -> Unit,
-    onPlannerClick: () -> Unit,
+fun BookingRoute(
+    onHomeClick: () -> Unit,
     onTripsClick: () -> Unit,
+    onPlannerClick: () -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onBookingClick: () -> Unit = {},
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: BookingViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    HomeScreen(
+    BookingScreen(
         uiState = uiState,
         onSearchQueryChange = viewModel::onSearchQueryChange,
-        onSearchSubmit = viewModel::onSearchSubmit,
-        onWishlistClick = onWishlistClick,
-        onGroupHubClick = onGroupHubClick,
-        onBookingClick = onBookingClick,
-        onPlannerClick = onPlannerClick,
+        onDestinationSelected = viewModel::onDestinationSelected,
+        onCategorySelected = viewModel::onCategorySelected,
+        onClearDestination = viewModel::clearDestination,
+        onClearSearch = viewModel::clearSearch,
+        onResetFilters = viewModel::resetFilters,
+        onHomeClick = onHomeClick,
         onTripsClick = onTripsClick,
+        onPlannerClick = onPlannerClick,
         onExpensesClick = onExpensesClick,
         onProfileClick = onProfileClick,
     )
