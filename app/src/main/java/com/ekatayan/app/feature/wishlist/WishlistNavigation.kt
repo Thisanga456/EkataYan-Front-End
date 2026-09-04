@@ -4,6 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ekatayan.app.feature.notifications.NotificationsUiState
+import kotlinx.coroutines.flow.StateFlow
 
 const val WISHLIST_ROUTE = "wishlist"
 const val WISHLIST_GROUP_ROUTE = "wishlist/{groupId}"
@@ -20,6 +22,9 @@ fun NavGraphBuilder.wishlistScreens(
     onPlannerClick: (Int?) -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    notificationsUiState: StateFlow<NotificationsUiState>,
 ) {
     composable(WISHLIST_ROUTE) {
         WishlistRoute(
@@ -30,6 +35,9 @@ fun NavGraphBuilder.wishlistScreens(
             onPlannerClick = { onPlannerClick(null) },
             onExpensesClick = onExpensesClick,
             onProfileClick = onProfileClick,
+            onSettingsClick = onSettingsClick,
+            onNotificationClick = onNotificationClick,
+            notificationsUiState = notificationsUiState,
         )
     }
     composable(
@@ -46,6 +54,9 @@ fun NavGraphBuilder.wishlistScreens(
             onPlannerClick = { onPlannerClick(null) },
             onExpensesClick = onExpensesClick,
             onProfileClick = onProfileClick,
+            onSettingsClick = onSettingsClick,
+            onNotificationClick = onNotificationClick,
+            notificationsUiState = notificationsUiState,
         )
     }
 }

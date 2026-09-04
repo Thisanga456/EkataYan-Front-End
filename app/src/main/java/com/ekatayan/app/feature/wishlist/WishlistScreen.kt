@@ -49,6 +49,7 @@ fun WishlistScreen(
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
     onNotificationClick: () -> Unit = {},
+    hasUnreadNotifications: Boolean = false,
     onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
@@ -72,7 +73,7 @@ fun WishlistScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
-                WishlistHeader(onNotificationClick, onSettingsClick)
+                WishlistHeader(onNotificationClick, onSettingsClick, hasUnreadNotifications)
                 CreateWishlistButton(onClick = { createDialogVisible = true })
                 Spacer(Modifier.height(4.dp))
             }
@@ -164,9 +165,9 @@ fun WishlistScreen(
 }
 
 @Composable
-private fun WishlistHeader(onNotificationClick: () -> Unit, onSettingsClick: () -> Unit) {
+private fun WishlistHeader(onNotificationClick: () -> Unit, onSettingsClick: () -> Unit, hasUnreadNotifications: Boolean) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Text("Wish List", fontSize = 28.sp, fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f))
-        HeaderActions(onNotificationClick, onSettingsClick)
+        HeaderActions(onNotificationClick, onSettingsClick, hasUnreadNotifications)
     }
 }

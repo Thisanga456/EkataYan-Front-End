@@ -74,6 +74,7 @@ fun WishlistGroupDetailsScreen(
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
     onNotificationClick: () -> Unit = {},
+    hasUnreadNotifications: Boolean = false,
     onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
@@ -106,7 +107,7 @@ fun WishlistGroupDetailsScreen(
                 verticalArrangement = Arrangement.spacedBy(11.dp),
             ) {
                 item {
-                    GroupDetailsHeader(group.name, onBackClick, onNotificationClick, onSettingsClick)
+                    GroupDetailsHeader(group.name, onBackClick, onNotificationClick, onSettingsClick, hasUnreadNotifications)
                     GroupActions(
                         onEditClick = { renameVisible = true },
                         onPlanWithAiClick = onPlanWithAiClick,
@@ -139,11 +140,11 @@ fun WishlistGroupDetailsScreen(
 }
 
 @Composable
-private fun GroupDetailsHeader(title: String, onBackClick: () -> Unit, onNotificationClick: () -> Unit, onSettingsClick: () -> Unit) {
+private fun GroupDetailsHeader(title: String, onBackClick: () -> Unit, onNotificationClick: () -> Unit, onSettingsClick: () -> Unit, hasUnreadNotifications: Boolean) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = onBackClick, modifier = Modifier.size(32.dp)) { Icon(Icons.Default.KeyboardArrowLeft, "Back", modifier = Modifier.size(28.dp)) }
         Text(title, fontSize = 28.sp, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
-        HeaderActions(onNotificationClick, onSettingsClick)
+        HeaderActions(onNotificationClick, onSettingsClick, hasUnreadNotifications)
     }
 }
 

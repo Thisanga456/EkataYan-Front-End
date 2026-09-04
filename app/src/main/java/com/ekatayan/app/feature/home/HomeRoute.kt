@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ekatayan.app.feature.notifications.NotificationsUiState
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun HomeRoute(
@@ -13,10 +16,14 @@ fun HomeRoute(
     onTripsClick: () -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onBookingClick: () -> Unit = {},
+    onBookingClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    notificationsUiState: StateFlow<NotificationsUiState>,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val notificationState by notificationsUiState.collectAsStateWithLifecycle()
     HomeScreen(
         uiState = uiState,
         onSearchQueryChange = viewModel::onSearchQueryChange,
@@ -28,5 +35,8 @@ fun HomeRoute(
         onTripsClick = onTripsClick,
         onExpensesClick = onExpensesClick,
         onProfileClick = onProfileClick,
+        onSettingsClick = onSettingsClick,
+        onNotificationClick = onNotificationClick,
+        hasUnreadNotifications = notificationState.hasUnreadNotifications,
     )
 }

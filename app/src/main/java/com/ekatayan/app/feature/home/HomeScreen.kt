@@ -25,6 +25,7 @@ import com.ekatayan.app.core.designsystem.component.AppBottomNavigation
 fun HomeScreen(
     uiState: HomeUiState,
     onNotificationClick: () -> Unit = {},
+    hasUnreadNotifications: Boolean = false,
     onSettingsClick: () -> Unit = {},
     onSearchQueryChange: (String) -> Unit = {},
     onSearchSubmit: () -> Unit = {},
@@ -55,6 +56,7 @@ fun HomeScreen(
                         user = uiState.user,
                         searchQuery = uiState.searchQuery,
                         onNotificationClick = onNotificationClick,
+                        hasUnreadNotifications = hasUnreadNotifications,
                         onSettingsClick = onSettingsClick,
                         onSearchQueryChange = onSearchQueryChange,
                         onSearchSubmit = onSearchSubmit,

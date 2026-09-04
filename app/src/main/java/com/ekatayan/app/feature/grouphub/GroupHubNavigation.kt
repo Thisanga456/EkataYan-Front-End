@@ -4,6 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ekatayan.app.feature.notifications.NotificationsUiState
+import kotlinx.coroutines.flow.StateFlow
 
 const val GROUP_HUB_ROUTE = "group_hub"
 const val GROUP_CHAT_ROUTE = "group_hub/chat/{groupId}"
@@ -24,8 +26,11 @@ fun NavGraphBuilder.groupHubScreens(
     onPlannerClick: () -> Unit,
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    notificationsUiState: StateFlow<NotificationsUiState>,
 ) {
-    composable(GROUP_HUB_ROUTE) { GroupHubRoute(viewModel, onGroupClick, onHomeClick, onTripsClick, onPlannerClick, onExpensesClick, onProfileClick) }
+    composable(GROUP_HUB_ROUTE) { GroupHubRoute(viewModel, onGroupClick, onHomeClick, onTripsClick, onPlannerClick, onExpensesClick, onProfileClick, onSettingsClick, onNotificationClick, notificationsUiState) }
     composable(GROUP_CHAT_ROUTE, arguments = listOf(navArgument(GROUP_ID) { type = NavType.StringType })) { entry ->
         GroupChatRoute(requireNotNull(entry.arguments?.getString(GROUP_ID)), viewModel, onBackClick, onInfoClick, onRemoved)
     }

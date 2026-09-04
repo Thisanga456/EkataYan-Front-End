@@ -66,6 +66,7 @@ fun ProfileScreen(
     onExpensesClick: () -> Unit,
     onProfileClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
+    hasUnreadNotifications: Boolean = false,
     onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -104,6 +105,7 @@ fun ProfileScreen(
 
                         HeaderActions(
                             onNotificationClick = onNotificationClick,
+                            hasUnreadNotifications = hasUnreadNotifications,
                             onSettingsClick = onSettingsClick,
                         )
                     }
@@ -249,7 +251,8 @@ fun ProfileScreen(
                             Icons.Outlined.Notifications,
                             "Notifications",
                             "Manage your notification preferences",
-                            Purple
+                            Purple,
+                            onClick = onNotificationClick,
                         )
 
                         ProfileItem(
@@ -336,12 +339,13 @@ private fun ProfileItem(
     title: String,
     subtitle: String,
     color: Color,
-    trailing: String? = null
+    trailing: String? = null,
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
