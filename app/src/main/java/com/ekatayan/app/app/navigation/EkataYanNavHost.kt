@@ -16,12 +16,20 @@ import com.ekatayan.app.feature.grouphub.groupHubScreens
 import com.ekatayan.app.feature.grouphub.groupInfoRoute
 import com.ekatayan.app.feature.login.LOGIN_ROUTE
 import com.ekatayan.app.feature.login.loginScreen
+import com.ekatayan.app.core.designsystem.component.AppBottomNavItem
+import com.ekatayan.app.feature.notifications.NOTIFICATIONS_ROUTE
+import com.ekatayan.app.feature.notifications.NotificationsViewModel
+import com.ekatayan.app.feature.notifications.notificationDetailRoute
+import com.ekatayan.app.feature.notifications.notificationDetailScreen
+import com.ekatayan.app.feature.notifications.notificationsScreen
 import com.ekatayan.app.feature.planner.PLANNER_ROUTE
 import com.ekatayan.app.feature.planner.plannerScreen
 import com.ekatayan.app.feature.profile.PROFILE_ROUTE
 import com.ekatayan.app.feature.profile.profileScreen
 import com.ekatayan.app.feature.signup.SIGN_UP_ROUTE
 import com.ekatayan.app.feature.signup.signUpScreen
+import com.ekatayan.app.feature.settings.SETTINGS_ROUTE
+import com.ekatayan.app.feature.settings.settingsScreen
 import com.ekatayan.app.feature.trips.TRIPS_ROUTE
 
 import com.ekatayan.app.feature.trips.tripsScreen
@@ -37,6 +45,7 @@ fun EkataYanNavHost(
 ) {
     val wishlistViewModel: WishlistViewModel = hiltViewModel()
     val groupHubViewModel: GroupHubViewModel = hiltViewModel()
+    val notificationsViewModel: NotificationsViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -58,6 +67,9 @@ fun EkataYanNavHost(
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
             onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+            onSettingsClick = navController::navigateToSettings,
+            onNotificationClick = navController::navigateToNotifications,
+            notificationsUiState = notificationsViewModel.uiState,
         )
         plannerScreen(onBackClick = navController::navigateUp)
         tripsScreen(onBackClick = navController::navigateUp)
@@ -66,6 +78,9 @@ fun EkataYanNavHost(
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+            onSettingsClick = navController::navigateToSettings,
+            onNotificationClick = navController::navigateToNotifications,
+            notificationsUiState = notificationsViewModel.uiState,
         )
         profileScreen(
             onBackClick = navController::navigateUp,
@@ -73,6 +88,31 @@ fun EkataYanNavHost(
             onTripsClick = { navController.navigate(TRIPS_ROUTE) },
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onSettingsClick = navController::navigateToSettings,
+            onNotificationClick = navController::navigateToNotifications,
+            notificationsUiState = notificationsViewModel.uiState,
+        )
+        settingsScreen(
+            onLogoutClick = {},
+            onHomeClick = { navController.navigate(HOME_ROUTE) },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) { launchSingleTop = true } },
+        )
+        notificationsScreen(
+            viewModel = notificationsViewModel,
+            selectedBottomNavItem = { navController.previousTopLevelItem() },
+            onHomeClick = { navController.navigate(HOME_ROUTE) },
+            onTripsClick = { navController.navigate(TRIPS_ROUTE) },
+            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
+            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
+            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+            onNotificationClick = { navController.navigate(notificationDetailRoute(it)) },
+        )
+        notificationDetailScreen(
+            viewModel = notificationsViewModel,
+            onBackClick = navController::navigateUp,
         )
         wishlistScreens(
             viewModel = wishlistViewModel,
@@ -83,6 +123,9 @@ fun EkataYanNavHost(
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
             onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+            onSettingsClick = navController::navigateToSettings,
+            onNotificationClick = navController::navigateToNotifications,
+            notificationsUiState = notificationsViewModel.uiState,
         )
         groupHubScreens(
             viewModel = groupHubViewModel,
@@ -95,6 +138,9 @@ fun EkataYanNavHost(
             onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
             onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
             onProfileClick = { navController.navigate(PROFILE_ROUTE) },
+            onSettingsClick = navController::navigateToSettings,
+            onNotificationClick = navController::navigateToNotifications,
+            notificationsUiState = notificationsViewModel.uiState,
         )
     }
 }
@@ -116,3 +162,20 @@ private fun NavHostController.navigateHomeFromAuth() {
         launchSingleTop = true
     }
 }
+
+private fun NavHostController.navigateToSettings() {
+    navigate(SETTINGS_ROUTE) { launchSingleTop = true }
+}
+
+private fun NavHostController.navigateToNotifications() {
+    navigate(NOTIFICATIONS_ROUTE) { launchSingleTop = true }
+}
+
+private fun NavHostController.previousTopLevelItem(): AppBottomNavItem =
+    when (previousBackStackEntry?.destination?.route) {
+        TRIPS_ROUTE -> AppBottomNavItem.TRIPS
+        PLANNER_ROUTE -> AppBottomNavItem.PLANNER
+        EXPENSES_ROUTE -> AppBottomNavItem.EXPENSES
+        PROFILE_ROUTE, SETTINGS_ROUTE -> AppBottomNavItem.PROFILE
+        else -> AppBottomNavItem.HOME
+    }

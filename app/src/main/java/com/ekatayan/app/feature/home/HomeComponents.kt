@@ -84,6 +84,7 @@ fun HeroSection(
     user: User,
     searchQuery: String,
     onNotificationClick: () -> Unit,
+    hasUnreadNotifications: Boolean,
     onSettingsClick: () -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onSearchSubmit: () -> Unit,
@@ -107,6 +108,7 @@ fun HeroSection(
         }
         HeaderActions(
             onNotificationClick = onNotificationClick,
+            hasUnreadNotifications = hasUnreadNotifications,
             onSettingsClick = onSettingsClick,
             modifier = Modifier.align(Alignment.TopEnd).padding(top = 47.dp, end = 14.dp),
         )

@@ -43,7 +43,7 @@ import java.time.format.DateTimeFormatter
 private val PopupBorder = Color(0xFFAEDCFA)
 
 @Composable
-fun GroupHubScreen(state: GroupHubUiState, onGroupClick: (String) -> Unit, onCreateGroup: (String, String, Set<String>, String?) -> Boolean, onHomeClick: () -> Unit, onTripsClick: () -> Unit, onPlannerClick: () -> Unit, onExpensesClick: () -> Unit, onProfileClick: () -> Unit, modifier: Modifier = Modifier) {
+fun GroupHubScreen(state: GroupHubUiState, onGroupClick: (String) -> Unit, onCreateGroup: (String, String, Set<String>, String?) -> Boolean, onHomeClick: () -> Unit, onTripsClick: () -> Unit, onPlannerClick: () -> Unit, onExpensesClick: () -> Unit, onProfileClick: () -> Unit, onSettingsClick: () -> Unit, onNotificationClick: () -> Unit, hasUnreadNotifications: Boolean, modifier: Modifier = Modifier) {
     var query by rememberSaveable { mutableStateOf("") }
     var filter by rememberSaveable { mutableStateOf(GroupFilter.All) }
     var creating by remember { mutableStateOf(false) }
@@ -52,7 +52,7 @@ fun GroupHubScreen(state: GroupHubUiState, onGroupClick: (String) -> Unit, onCre
         Column(Modifier.fillMaxSize().statusBarsPadding().padding(horizontal = 20.dp)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text("Group Hub", fontSize = 28.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                HeaderActions({}, {})
+                HeaderActions(onNotificationClick = onNotificationClick, onSettingsClick = onSettingsClick, hasUnreadNotifications = hasUnreadNotifications)
             }
             Spacer(Modifier.height(18.dp))
             SearchField(query, { query = it }, "Search Your Groups")
