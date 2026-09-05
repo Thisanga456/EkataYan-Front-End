@@ -110,4 +110,24 @@
     <string name="notification_detail_title">Notification</string>
     <string name="notification_detail_back">Back</string>
     <string name="notification_detail_not_found">Notification not found.</string>
+
+    <string name="welcome_logo_description">EkataYan logo</string>
+    <string name="welcome_description">Plan your trips, manage expenses, stay connected and discover the best experiences all in one app</string>
+    <string name="welcome_get_started">Get Started</string>
+    <string name="welcome_trip_planner">AI Trip Planner</string>
+    <string name="welcome_trip_planner_subtitle">Smart itineraries tailored for you</string>
+    <string name="welcome_group_travel">Group Travel</string>
+    <string name="welcome_group_travel_subtitle">Plan, chat and travel together</string>
+    <string name="welcome_expense_manager">Expense Manager</string>
+    <string name="welcome_expense_manager_subtitle">Track, split and stay on budget</string>
+    <string name="welcome_all_in_one">All in One</string>
+    <string name="welcome_all_in_one_subtitle">Everything you need for your trip</string>
+    <string name="welcome_explore_places">Explore Places</string>
+    <string name="welcome_explore_places_subtitle">Discover top spots &amp; hidden gems</string>
+    <string name="welcome_weather_alerts">Weather Alerts</string>
+    <string name="welcome_weather_alerts_subtitle">Stay updated wherever you go</string>
+    <string name="welcome_smart_reminders">Smart Reminders</string>
+    <string name="welcome_smart_reminders_subtitle">Never miss what matters</string>
+    <string name="welcome_safe_secure">Safe &amp; Secure</string>
+    <string name="welcome_safe_secure_subtitle">Your data and trips are protected</string>
 </resources>

@@ -30,6 +30,8 @@ import com.ekatayan.app.feature.signup.SIGN_UP_ROUTE
 import com.ekatayan.app.feature.signup.signUpScreen
 import com.ekatayan.app.feature.settings.SETTINGS_ROUTE
 import com.ekatayan.app.feature.settings.settingsScreen
+import com.ekatayan.app.feature.splash.SPLASH_ROUTE
+import com.ekatayan.app.feature.splash.splashScreen
 import com.ekatayan.app.feature.trips.TRIPS_ROUTE
 
 import com.ekatayan.app.feature.trips.tripsScreen
@@ -49,9 +51,16 @@ fun EkataYanNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = LOGIN_ROUTE,
+        startDestination = SPLASH_ROUTE,
         modifier = modifier,
     ) {
+        splashScreen(
+            onSplashFinished = {
+                navController.navigate(LOGIN_ROUTE) {
+                    popUpTo(SPLASH_ROUTE) { inclusive = true }
+                }
+            }
+        )
         loginScreen(
             onLogInClick = navController::navigateHomeFromAuth,
             onSignUpClick = navController::navigateToSignUp,
