@@ -2,9 +2,19 @@ package com.ekatayan.app.feature.expenses
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.ekatayan.app.feature.notifications.NotificationsUiState
+import kotlinx.coroutines.flow.StateFlow
 
 const val EXPENSES_ROUTE = "expenses"
 
-fun NavGraphBuilder.expensesScreen(onBackClick: () -> Unit) {
-    composable(EXPENSES_ROUTE) { ExpensesRoute(onBackClick = onBackClick) }
+fun NavGraphBuilder.expensesScreen(
+    onHomeClick: () -> Unit,
+    onTripsClick: () -> Unit,
+    onPlannerClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    notificationsUiState: StateFlow<NotificationsUiState>,
+) {
+    composable(EXPENSES_ROUTE) { ExpensesRoute(onHomeClick, onTripsClick, onPlannerClick, onProfileClick, onSettingsClick, onNotificationClick, notificationsUiState) }
 }

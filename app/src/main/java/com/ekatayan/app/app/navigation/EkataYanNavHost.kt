@@ -16,10 +16,7 @@ import com.ekatayan.app.feature.profile.PROFILE_ROUTE
 import com.ekatayan.app.feature.profile.profileScreen
 import com.ekatayan.app.feature.signup.SIGN_UP_ROUTE
 import com.ekatayan.app.feature.signup.signUpScreen
-import com.ekatayan.app.feature.trips.CREATE_TRIP_ROUTE
 import com.ekatayan.app.feature.trips.TRIPS_ROUTE
-import com.ekatayan.app.feature.trips.createTripScreen
-import com.ekatayan.app.feature.trips.tripDetailsScreen
 import com.ekatayan.app.feature.trips.tripsScreen
 
 @Composable
@@ -47,17 +44,7 @@ fun EkataYanNavHost(
             onProfileClick = { navController.navigate(PROFILE_ROUTE) },
         )
         plannerScreen(onBackClick = navController::navigateUp)
-        tripsScreen(
-            onHomeClick = { navController.navigate(HOME_ROUTE) },
-            onTripsClick = { navController.navigate(TRIPS_ROUTE) { launchSingleTop = true } },
-            onPlannerClick = { navController.navigate(PLANNER_ROUTE) },
-            onExpensesClick = { navController.navigate(EXPENSES_ROUTE) },
-            onProfileClick = { navController.navigate(PROFILE_ROUTE) },
-            onAddTripClick = { navController.navigate(CREATE_TRIP_ROUTE) },
-            onTripClick = { trip -> navController.navigate("trips/details/${trip.id}") },
-        )
-        createTripScreen(onBackClick = navController::navigateUp)
-        tripDetailsScreen(onBackClick = navController::navigateUp)
+        tripsScreen(onBackClick = navController::navigateUp)
         expensesScreen(onBackClick = navController::navigateUp)
         profileScreen(
             onBackClick = navController::navigateUp,
