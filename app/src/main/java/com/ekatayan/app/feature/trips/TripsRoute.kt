@@ -28,6 +28,7 @@ fun TripsRoute(
         onExpensesClick = onExpensesClick,
         onProfileClick = onProfileClick,
         onAddTripClick = onAddTripClick,
+        onDeleteTrip = viewModel::deleteTrip,
         onTripClick = { trip ->
             viewModel.selectDate(trip.startDate)
             onTripClick(trip)

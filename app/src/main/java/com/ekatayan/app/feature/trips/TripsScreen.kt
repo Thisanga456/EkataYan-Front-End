@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.ArrowForwardIos
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
@@ -32,6 +33,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,10 +84,11 @@ fun TripsScreen(
     onAddTripClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    onSeeAllClick: () -> Unit = {},
+    onDeleteTrip: (Int) -> Unit = {},
     onTripClick: (Trip) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
+    var pendingDeleteTrip by remember { mutableStateOf<Trip?>(null) }
     Box(modifier = modifier.fillMaxSize().background(EkataBackground)) {
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 112.dp)) {
             item { TripsHeader(onAddTripClick, onNotificationClick, onSettingsClick) }
@@ -96,9 +104,15 @@ fun TripsScreen(
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
                 )
             }
-            item { TimelineHeader(onSeeAllClick) }
-            items(uiState.trips, key = { it.id }) { trip ->
-                TripTimelineCard(trip, { onTripClick(trip) }, uiState.today, Modifier.padding(horizontal = 20.dp, vertical = 6.dp))
+            item { TimelineHeader() }
+            listOf(R.string.trip_status_upcoming, R.string.trip_status_ongoing, R.string.trip_status_past).forEach { status ->
+                val statusTrips = uiState.trips.filter { it.statusFor(uiState.today) == status }
+                if (statusTrips.isNotEmpty()) {
+                    item { TimelineStatusHeader(status) }
+                    items(statusTrips, key = { it.id }) { trip ->
+                        TripTimelineCard(trip, { onTripClick(trip) }, uiState.today, Modifier.padding(horizontal = 20.dp, vertical = 6.dp), { pendingDeleteTrip = trip })
+                    }
+                }
             }
         }
         AppBottomNavigation(
@@ -111,6 +125,20 @@ fun TripsScreen(
             modifier = Modifier.align(Alignment.BottomCenter),
         )
     }
+    pendingDeleteTrip?.let { trip ->
+        AlertDialog(
+            onDismissRequest = { pendingDeleteTrip = null },
+            title = { Text(stringResource(R.string.trips_delete_title)) },
+            text = { Text(stringResource(R.string.trips_delete_message)) },
+            confirmButton = { TextButton(onClick = { onDeleteTrip(trip.id); pendingDeleteTrip = null }) { Text(stringResource(R.string.trips_delete_action)) } },
+            dismissButton = { TextButton(onClick = { pendingDeleteTrip = null }) { Text(stringResource(R.string.create_trip_cancel)) } },
+        )
+    }
+}
+
+@Composable
+private fun TimelineStatusHeader(@StringRes status: Int) {
+    Text(stringResource(status), style = androidx.compose.material3.MaterialTheme.typography.titleMedium, color = EkataTextPrimary, modifier = Modifier.padding(start = 20.dp, top = 14.dp, bottom = 2.dp))
 }
 
 @Composable
@@ -237,24 +265,17 @@ private fun CalendarDay(
 }
 
 @Composable
-private fun TimelineHeader(onSeeAllClick: () -> Unit) {
+private fun TimelineHeader() {
     Row(
         modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 14.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(stringResource(R.string.trips_timeline), fontSize = 21.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-        Text(
-            stringResource(R.string.trips_see_all),
-            color = EkataBlue,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.clickable(onClick = onSeeAllClick).padding(4.dp),
-        )
+        Text(stringResource(R.string.trips_timeline), fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 
 @Composable
-fun TripTimelineCard(trip: Trip, onClick: () -> Unit, today: LocalDate = LocalDate.now(), modifier: Modifier = Modifier) {
+fun TripTimelineCard(trip: Trip, onClick: () -> Unit, today: LocalDate = LocalDate.now(), modifier: Modifier = Modifier, onDeleteClick: () -> Unit = {}) {
     Card(
         modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(20.dp),
@@ -282,13 +303,18 @@ fun TripTimelineCard(trip: Trip, onClick: () -> Unit, today: LocalDate = LocalDa
                 Spacer(Modifier.height(7.dp))
                 TripStatus(trip.statusFor(today))
             }
-            Icon(Icons.Outlined.ArrowForwardIos, stringResource(R.string.trips_open_trip), tint = EkataTextSecondary, modifier = Modifier.size(15.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(Icons.Outlined.ArrowForwardIos, stringResource(R.string.trips_open_trip), tint = EkataTextSecondary, modifier = Modifier.size(15.dp))
+                IconButton(onClick = onDeleteClick, modifier = Modifier.size(32.dp)) {
+                    Icon(Icons.Default.Delete, stringResource(R.string.trips_delete_action), tint = EkataTextSecondary, modifier = Modifier.size(18.dp))
+                }
+            }
         }
     }
 }
 
 @Composable
-private fun TripStatus(@StringRes statusRes: Int) {
+internal fun TripStatus(@StringRes statusRes: Int) {
     Text(
         stringResource(statusRes),
         fontSize = 10.sp,

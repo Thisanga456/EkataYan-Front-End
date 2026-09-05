@@ -60,6 +60,10 @@ class TripsViewModel @Inject constructor(private val repository: TripsRepository
     fun selectDate(date: LocalDate) {
         _uiState.update { it.copy(selectedDate = date) }
     }
+
+    fun deleteTrip(tripId: Int) {
+        repository.deleteTrip(tripId)
+    }
 }
 
 data class TripsUiState(
@@ -91,8 +95,27 @@ class TripsRepository @Inject constructor() {
 
     fun addTrip(name: String, destination: String, startDate: LocalDate, endDate: LocalDate, budget: String, notes: String) {
         val nextId = (_trips.value.maxOfOrNull { it.id } ?: 0) + 1
-        _trips.update { it + Trip(nextId, 0, 0, R.string.trip_status_planned, startDate, endDate, R.drawable.galle, name, destination, budget.ifBlank { null }, notes.ifBlank { null }) }
+        _trips.update {
+            it + Trip(
+                nextId, 0, 0, R.string.trip_status_upcoming, startDate, endDate,
+                destinationImage(destination), name.trim(), destination.trim(),
+                budget.trim().ifBlank { null }, notes.trim().ifBlank { null },
+            )
+        }
     }
+
+    fun deleteTrip(tripId: Int) {
+        _trips.update { trips -> trips.filterNot { it.id == tripId } }
+    }
+}
+
+private fun destinationImage(destination: String): Int = when {
+    destination.contains("kandy", ignoreCase = true) -> R.drawable.kandy
+    destination.contains("galle", ignoreCase = true) || destination.contains("mirissa", ignoreCase = true) -> R.drawable.galle
+    destination.contains("colombo", ignoreCase = true) -> R.drawable.colombo
+    destination.contains("sigiriya", ignoreCase = true) -> R.drawable.sigiriya
+    destination.contains("ella", ignoreCase = true) || destination.contains("nuwara", ignoreCase = true) -> R.drawable.nine_arch_bridge
+    else -> R.drawable.home_header
 }
 
 private fun createTripsUiState(today: LocalDate) = TripsUiState(
